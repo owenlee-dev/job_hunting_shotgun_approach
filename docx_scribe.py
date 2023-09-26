@@ -24,10 +24,19 @@ def find_and_replace(file_path, replacements, save_path):
     # Save the updated content to the new location
     document.save(save_path)
 
-def replace_in_paragraph(paragraph, replacements):
-    for find_text, replace_text in replacements.items():
-        # print(find_text+", "+replace_text)
-        paragraph.text = paragraph.text.replace(find_text, replace_text)
+def replace_in_paragraph(element, replacements):
+    # Check if the element is a table cell
+    if hasattr(element, 'paragraphs'):
+        for paragraph in element.paragraphs:
+            replace_text_in_paragraph(paragraph, replacements)
+    # Otherwise, assume it's a paragraph
+    else:
+        replace_text_in_paragraph(element, replacements)
+
+def replace_text_in_paragraph(paragraph, replacements):
+    for run in paragraph.runs:
+        for find_text, replace_text in replacements.items():
+            run.text = run.text.replace(find_text, replace_text)
 
 
 # replacements = {

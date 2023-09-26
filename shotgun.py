@@ -27,28 +27,32 @@ current_template = "assets/docx_cover_letters/Product_CL_Template.docx"
 job_listings = get_jobs("Product Owner in Berlin, Germany")
 # 2
 jobs_filtered = filter_job_listings(job_listings)
-print(jobs_filtered)
-# # with open('assets/test_response.json','w') as f:
-# #   json.dump(jobs_filtered,f)
-# # # 3
-for listing in jobs_filtered:
-    # 4
-    paragraph = get_personalized_paragraph(
-        company_name=listing.employer_name,
-        position_title=listing.job_job_title,
-        job_description=listing.job_description,
-        cover_letter_text=product_role,
-    )
-    # 5
-    replacements = {
-        "<owenTitle>": str(listing.job_job_title),
-        "<date>": date.today().strftime("%m/%d/%y"),
-        "<positionRole>": str(listing.job_job_title),
-        "<positionLocation>": listing.job_city + ", " + listing.job_country,
-        "<companyName>": str(listing.employer_name),
-        "<companyParagraph>": str(paragraph["choices"][0]["message"]["content"]),
-    }
-    find_and_replace(
-        current_template, replacements, "assets/docx_cover_letters/test_file.docx"
-    )
-    break
+
+# 3
+# print("\n\n")
+# for listing in jobs_filtered:
+#     print(listing.employer_name)
+
+# # for listing in jobs_filtered:
+# #     # 4
+# #     paragraph = get_personalized_paragraph(
+# #         company_name=listing.employer_name,
+# #         position_title=listing.job_job_title,
+# #         job_description=listing.job_description,
+# #         cover_letter_text=product_role,
+# #     )
+# #     # 5
+# #     replacements = {
+# #         "<owenTitle>": str(listing.job_job_title),
+# #         "<date>": date.today().strftime("%B %d, %Y"),
+# #         "<positionRole>": str(listing.job_job_title),
+# #         "<positionLocation>": listing.job_city + ", " + listing.job_country,
+# #         "<companyName>": str(listing.employer_name),
+# #         "<companyParagraph>": paragraph,
+# #     }
+
+
+# #     find_and_replace(
+# #         current_template, replacements, "assets/docx_cover_letters/test_file.docx"
+# #     )
+#     break

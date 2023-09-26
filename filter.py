@@ -66,44 +66,48 @@ class JobListing:
 
 
 def filter_job_listings(job_listings_raw):
-    
     job_listings = []
     for i in range(len(job_listings_raw)):
-      # break;
-      listing = JobListing(
-          employer_name=job_listings_raw[i]["employer_name"],
-          employer_website=job_listings_raw[i]["employer_website"],
-          employer_company_type=job_listings_raw[i]["employer_company_type"],
-          job_title=job_listings_raw[i]["job_title"],
-          job_apply_link=job_listings_raw[i]["job_apply_link"],
-          apply_options=job_listings_raw[i]["apply_options"],
-          job_description=text_format(
-              job_listings_raw[i]["job_description"],
-          ),
-          job_is_remote=job_listings_raw[i]["job_is_remote"],
-          job_country=job_listings_raw[i]["job_country"],
-          job_city=job_listings_raw[i]["job_city"],
-          job_required_experience=job_listings_raw[i]["job_required_experience"],
-          job_required_skills=job_listings_raw[i]["job_required_skills"],
-          job_job_title=job_listings_raw[i]["job_job_title"],
-      )
-      job_listings.append(listing)
+        # break;
+        listing = JobListing(
+            employer_name=job_listings_raw[i]["employer_name"],
+            employer_website=job_listings_raw[i]["employer_website"],
+            employer_company_type=job_listings_raw[i]["employer_company_type"],
+            job_title=job_listings_raw[i]["job_title"],
+            job_apply_link=job_listings_raw[i]["job_apply_link"],
+            apply_options=job_listings_raw[i]["apply_options"],
+            job_description=text_format(
+                job_listings_raw[i]["job_description"],
+            ),
+            job_is_remote=job_listings_raw[i]["job_is_remote"],
+            job_country=job_listings_raw[i]["job_country"],
+            job_city=job_listings_raw[i]["job_city"],
+            job_required_experience=job_listings_raw[i]["job_required_experience"],
+            job_required_skills=job_listings_raw[i]["job_required_skills"],
+            job_job_title=job_listings_raw[i]["job_job_title"],
+            job_posting_language=job_listings_raw[i]["job_posting_language"],
+        )
+        job_listings.append(listing)
+
     filterSeniorJobs(job_listings)
     filterNonEnglish(job_listings)
-    
+    for listing in job_listings:
+        print(f"{listing.employer_name} , {listing.job_title} , {listing.job_posting_language}")
     return job_listings
 
 
 # Function to filter out jobs that have the "Senior label or require more than 3 years of experience"
 def filterSeniorJobs(job_listings):
-  for listing in job_listings:
-    req_exp = listing.job_required_experience["required_experience_in_months"]
-    if "senior" in listing.job_title.lower():
-      job_listings.remove(listing)
-    elif req_exp and req_exp > 36:
-      job_listings.remove(listing)
-    else:
-       continue
+    to_remove=[]
+    for listing in job_listings:
+        req_exp = listing.job_required_experience["required_experience_in_months"]
+        if "senior" in listing.job_title.lower():
+            to_remove.append(listing)
+        elif req_exp and req_exp > 36:
+            to_remove.append(listing)
+
+    for listing in to_remove:
+        job_listings.remove(listing)
 
 
 def filterNonEnglish(job_listings):

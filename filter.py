@@ -6,6 +6,17 @@ def text_format(my_string):
     return my_string.replace("\n", " ")
 
 
+def remove_instance_of(s, sub):
+    index = 0
+    length = len(sub)
+    while index < len(s):
+        if s[index : index + length].lower() == sub.lower():
+            s = s[:index] + s[index + length :]
+        else:
+            index += 1
+    return s
+
+
 class JobListing:
     def __init__(
         self,
@@ -68,9 +79,12 @@ class JobListing:
 def filter_job_listings(job_listings_raw):
     job_listings = []
     for i in range(len(job_listings_raw)):
-        # break;
+        employer = remove_instance_of(
+            str(job_listings_raw[i]["employer_name"]), " GmbH"
+        )
+        employer = remove_instance_of(employer, "ltd")
         listing = JobListing(
-            employer_name=job_listings_raw[i]["employer_name"],
+            employer_name=employer.title(),
             employer_website=job_listings_raw[i]["employer_website"],
             employer_company_type=job_listings_raw[i]["employer_company_type"],
             job_title=job_listings_raw[i]["job_title"],
@@ -91,14 +105,14 @@ def filter_job_listings(job_listings_raw):
 
     filterSeniorJobs(job_listings)
     filterNonEnglish(job_listings)
-    for listing in job_listings:
-        print(f"{listing.employer_name} , {listing.job_title} , {listing.job_posting_language}")
+    # for listing in job_listings:
+    #     print(f"{listing.employer_name} , {listing.job_title} , {listing.job_posting_language}")
     return job_listings
 
 
 # Function to filter out jobs that have the "Senior label or require more than 3 years of experience"
 def filterSeniorJobs(job_listings):
-    to_remove=[]
+    to_remove = []
     for listing in job_listings:
         req_exp = listing.job_required_experience["required_experience_in_months"]
         if "senior" in listing.job_title.lower():

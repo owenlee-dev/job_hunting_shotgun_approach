@@ -10,7 +10,7 @@ replacements = {
 }
 
 find_and_replace(
-    "assets/docx_cover_letters/Climate_Manager_CL_Template.docx",
+    "assets/docx_source/Climate_Manager_CL_Template.docx",
     replacements,
-    "assets/docx_cover_letters/Climatssssss.docx",
+    "assets/docx_source/Climatssssss.docx",
 )

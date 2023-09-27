@@ -1,4 +1,7 @@
 from docx import Document
+from docx2pdf import convert
+import os
+import fitz
 
 
 def find_and_replace(file_path, replacements, save_path):
@@ -24,14 +27,16 @@ def find_and_replace(file_path, replacements, save_path):
     # Save the updated content to the new location
     document.save(save_path)
 
+
 def replace_in_paragraph(element, replacements):
     # Check if the element is a table cell
-    if hasattr(element, 'paragraphs'):
+    if hasattr(element, "paragraphs"):
         for paragraph in element.paragraphs:
             replace_text_in_paragraph(paragraph, replacements)
     # Otherwise, assume it's a paragraph
     else:
         replace_text_in_paragraph(element, replacements)
+
 
 def replace_text_in_paragraph(paragraph, replacements):
     for run in paragraph.runs:
@@ -39,17 +44,12 @@ def replace_text_in_paragraph(paragraph, replacements):
             run.text = run.text.replace(find_text, replace_text)
 
 
-# replacements = {
-#     "<owenTitle>": "THIS IS",
-#     "<date>": "THIS BE THE DATE",
-#     "<positionRole>": "HERE IT BE",
-#     "<companyName>": "HERE",
-#     "<companyParagraph>": "YUHS",
-# }
+# Funciton to convert docx to a pdf and save it to output path
+def convert_docx_to_pdf(input_path, output_path):
+    # convert to pdf
+    convert(input_path, "temp_pdf.pdf")
 
-# find_and_replace(
-#     "assets/docx_cover_letters/testing.docx",
-#     replacements,
-#     "assets/docx_cover_letters/Climatssssss.docx",
-# )
-  
+    # remove second blank page
+    file_handle = fitz.open("temp_pdf.pdf")
+    file_handle.delete_page(1)
+    file_handle.save(output_path)

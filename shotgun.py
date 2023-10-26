@@ -8,13 +8,15 @@ from docx2pdf import convert
 
 from api.jsearch_endpoint import get_jobs
 from api.openai_endpoint import get_personalized_paragraph
-from assets.cover_letters import *
+from fallback.assets.cover_letters import *
 from assets.settings import *
-from docx_scribe import convert_docx_to_pdf, find_and_replace
+from fallback.docx_scribe import convert_docx_to_pdf, find_and_replace
 from filter import filter_job_listings
 
 
 def list_to_bullet_points(items):
+    if items is None:
+        return ""
     bullet = "\u2022"  # Unicode character for a bullet point
     return "\n".join(bullet + " " + item.replace("<br>", "\n") for item in items)
 
@@ -54,7 +56,7 @@ for listing in jobs_filtered:
         company_name=listing.employer_name.title(),
         position_title=listing.job_job_title.title(),
         job_description=listing.job_description,
-        cover_letter_text=product_role.title(),
+        cover_letter_text=product_role,
     )
     # 5
     replacements = {
@@ -66,6 +68,7 @@ for listing in jobs_filtered:
         "<companyParagraph>": paragraph,
     }
     find_and_replace(current_template, replacements, "assets/docx_source/temp_doc.docx")
+    
     # 6
     file_name = listing.employer_name.replace(" ", "_")
     mypath = f"assets/application_packages/{file_name}"
@@ -74,12 +77,10 @@ for listing in jobs_filtered:
         os.makedirs(mypath)
 
     # cover letter
-    convert_docx_to_pdf(
-        "assets/docx_source/temp_doc.docx",
-        f"{mypath}/{file_name}_cover_letter.pdf",
-    )
+    
 
     # resume
+    shutil.copy("assets/docx_source/temp_doc.docx",f"{mypath}/{file_name}_cover_letter.docx")
     shutil.copy("assets/owen-resume.pdf", f"{mypath}/owen-resume.pdf")
 
     linkedin_link = "None"
@@ -104,4 +105,4 @@ for listing in jobs_filtered:
     }
     find_and_replace(job_info_template, replacements, f"{mypath}/{file_name}_info.docx")
 
-    break
+    # break
